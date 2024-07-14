@@ -46,7 +46,7 @@ const JoinOrganization = () => {
             placeholder="Search for an organization"
           />
         </div>
-        <div className="space-y-2">
+        <div className="space-y-2 max-h-[350px] overflow-y-auto">
           <div className="flex items-center justify-between rounded-md bg-muted p-3">
             <div>
               <h3 className="text-lg font-medium">Acme Inc</h3>
@@ -54,7 +54,7 @@ const JoinOrganization = () => {
                 Software Development
               </p>
             </div>
-            <Button variant="outline">Join</Button>
+            <Button>Join</Button>
           </div>
           <div className="flex items-center justify-between rounded-md bg-muted p-3">
             <div>
@@ -63,7 +63,7 @@ const JoinOrganization = () => {
                 Technology Solutions
               </p>
             </div>
-            <Button variant="outline">Join</Button>
+            <Button>Join</Button>
           </div>
           <div className="flex items-center justify-between rounded-md bg-muted p-3">
             <div>
@@ -72,7 +72,25 @@ const JoinOrganization = () => {
                 Engineering and Innovation
               </p>
             </div>
-            <Button variant="outline">Join</Button>
+            <Button>Join</Button>
+          </div>
+          <div className="flex items-center justify-between rounded-md bg-muted p-3">
+            <div>
+              <h3 className="text-lg font-medium">Stark Industries</h3>
+              <p className="text-sm text-muted-foreground">
+                Engineering and Innovation
+              </p>
+            </div>
+            <Button>Join</Button>
+          </div>
+          <div className="flex items-center justify-between rounded-md bg-muted p-3">
+            <div>
+              <h3 className="text-lg font-medium">Stark Industries</h3>
+              <p className="text-sm text-muted-foreground">
+                Engineering and Innovation
+              </p>
+            </div>
+            <Button>Join</Button>
           </div>
         </div>
       </form>

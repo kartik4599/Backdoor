@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import { LuKey } from "react-icons/lu";
 
 export default function LogoPage({ isSignIn }: { isSignIn: boolean }) {
   return (
@@ -17,7 +18,9 @@ export default function LogoPage({ isSignIn }: { isSignIn: boolean }) {
             "inline-flex items-center justify-center rounded-full bg-background p-4 text-6xl text-primary-foreground",
             !isSignIn && "bg-primary"
           )}>
-          <KeyIcon className="h-14 w-14" stroke={isSignIn ? "#16a34a" : ""} />
+          <LuKey
+            className={cn("h-14 w-14 text-primary", !isSignIn && "text-background")}
+          />
         </div>
         <Image
           className="mx-auto"
@@ -35,25 +38,5 @@ export default function LogoPage({ isSignIn }: { isSignIn: boolean }) {
         </p>
       </div>
     </div>
-  );
-}
-
-function KeyIcon(props: any) {
-  return (
-    <svg
-      {...props}
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke={props.stroke ? "#16a34a" : "currentColor"}
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round">
-      <path d="m15.5 7.5 2.3 2.3a1 1 0 0 0 1.4 0l2.1-2.1a1 1 0 0 0 0-1.4L19 4" />
-      <path d="m21 2-9.6 9.6" />
-      <circle cx="7.5" cy="15.5" r="5.5" />
-    </svg>
   );
 }
