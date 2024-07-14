@@ -1,7 +1,6 @@
 import Link from "next/link";
 import { LuKey } from "react-icons/lu";
 import Image from "next/image";
-import { IconType } from "react-icons";
 import MenuList from "./MenuList";
 
 const SideBar = () => {
