@@ -15,7 +15,7 @@ const MenuList = () => {
   return (
     <nav className="flex-1 space-y-2 overflow-auto py-4">
       {item.map((props) => (
-        <MenuItem {...props} />
+        <MenuItem {...props} key={props.name} />
       ))}
     </nav>
   );

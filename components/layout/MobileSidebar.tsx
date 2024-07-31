@@ -1,8 +1,7 @@
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { FiMenu } from "react-icons/fi";
 import { Button } from "../ui/button";
-import MenuList from "./MenuList";
-
+import { SideBarItems } from "./SideBar";
 
 const MobileSidebar = () => {
   return (
@@ -15,7 +14,7 @@ const MobileSidebar = () => {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="sm:max-w-xs">
-          <MenuList />
+          <SideBarItems />
         </SheetContent>
       </Sheet>
     </div>
