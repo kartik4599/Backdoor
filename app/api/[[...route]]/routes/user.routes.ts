@@ -1,7 +1,13 @@
 import client from "@/lib/DBClient";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
-import { createJwtToken, createPasswordHash, verifyPassword } from "../utils/commonFunction";
+import {
+  createJwtToken,
+  createPasswordHash,
+  verifyPassword,
+} from "../utils/commonFunction";
+import { jwt } from "hono/jwt";
+
 const User = new Hono().basePath("/auth");
 
 User.post("/signup", async ({ json, req }) => {
@@ -49,6 +55,10 @@ User.post("/signin", async ({ json, req }) => {
   } catch (e: any) {
     throw new HTTPException(400, { message: e.message });
   }
+});
+
+User.get("/me", jwt({ secret: "secret" }), async ({ get, json }) => {
+  return json(get("jwtPayload"));
 });
 
 export default User;
