@@ -5,55 +5,30 @@ import { useState } from "react";
 import OrganizationPage from "./OrganizationPage";
 import { FaSpinner } from "react-icons/fa6";
 import { createAccount } from "@/lib/services";
-import { useForm, Resolver } from "react-hook-form";
-
-type SignUpForm = {
-  name: string;
-  email: string;
-  password: string;
-};
-
-const resolver: Resolver<SignUpForm> = async (values) => {
-  return {
-    values: values,
-    errors: {
-      name: { type: "required", message: "Name is required" },
-      email: { type: "required", message: "Email is required" },
-      password: { type: "required", message: "Password is required" },
-    },
-  };
-};
+import { useForm } from "react-hook-form";
+import { cn, SignUpForm, signUpFormResolver } from "@/lib/utils";
 
 const SignUp = ({ setisSignIn }: { setisSignIn: () => void }) => {
-
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<SignUpForm>({ resolver });
-  
-  
-  console.log(errors);
-
+  const { register, handleSubmit, formState } = useForm<SignUpForm>({
+    resolver: signUpFormResolver,
+  });
+  const { errors } = formState as unknown as {
+    errors: { [key: string]: string };
+  };
   const [userCreated, setuserCreated] = useState(false);
   const [loading, setloading] = useState(false);
 
-  const createUser = async () => {
-    console.log("createUser");
-    handleSubmit((data) => console.log(data));
-    // try {
-    //   setloading(true);
-    //   const { data } = await createAccount({
-    //     email: "kartikm2@gmail.com",
-    //     password: "123456",
-    //     name: "kartik",
-    //   });
-    //   if (!data.organizationId) setuserCreated(true);
-    // } catch (e) {
-    //   console.log(e);
-    // } finally {
-    //   setloading(false);
-    // }
+  const createUser = async (payload: SignUpForm) => {
+    try {
+      setloading(true);
+      const { data } = await createAccount(payload);
+      if (!data.organizationId) setuserCreated(true);
+      console.log(data);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setloading(false);
+    }
   };
 
   return (
@@ -71,27 +46,39 @@ const SignUp = ({ setisSignIn }: { setisSignIn: () => void }) => {
                 Create an account to start sharing files and passwords.
               </p>
             </div>
-            <form
-              className="space-y-4"
-              onSubmit={(e) => {
-                e.preventDefault();
-                createUser();
-              }}
-            >
+            <form className="space-y-4" onSubmit={handleSubmit(createUser)}>
               <div className="space-y-2">
-                <Label htmlFor="name" className="text-primary-foreground">
+                <Label
+                  htmlFor="name"
+                  className={cn(
+                    "text-primary-foreground",
+                    errors.name && "text-red-500"
+                  )}
+                >
                   Name
                 </Label>
                 <Input
                   id="name"
                   type="text"
                   placeholder="John Doe"
-                  className="bg-primary-foreground/10 text-primary-foreground placeholder:text-primary-foreground"
+                  className={cn(
+                    "bg-primary-foreground/10 text-primary-foreground placeholder:text-primary-foreground",
+                    errors.name && " focus:ring-red-500"
+                  )}
                   {...register("name")}
                 />
+                {errors?.name && (
+                  <span className="text-red-500 text-sm">{errors?.name}</span>
+                )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="email" className="text-primary-foreground">
+                <Label
+                  htmlFor="email"
+                  className={cn(
+                    "text-primary-foreground",
+                    errors.email && "text-red-500"
+                  )}
+                >
                   Email
                 </Label>
                 <Input
@@ -99,19 +86,39 @@ const SignUp = ({ setisSignIn }: { setisSignIn: () => void }) => {
                   type="email"
                   placeholder="name@example.com"
                   {...register("email")}
-                  className="bg-primary-foreground/10 text-primary-foreground placeholder:text-primary-foreground"
+                  className={cn(
+                    "bg-primary-foreground/10 text-primary-foreground placeholder:text-primary-foreground",
+                    errors.email && " focus:ring-red-500"
+                  )}
                 />
+                {errors?.email && (
+                  <span className="text-red-500 text-sm">{errors?.email}</span>
+                )}
               </div>
               <div className="space-y-2">
-                <Label htmlFor="password" className="text-primary-foreground">
+                <Label
+                  htmlFor="password"
+                  className={cn(
+                    "text-primary-foreground",
+                    errors.password && "text-red-500"
+                  )}
+                >
                   Password
                 </Label>
                 <Input
                   id="password"
                   type="password"
                   {...register("password")}
-                  className="bg-primary-foreground/10 text-primary-foreground "
+                  className={cn(
+                    "bg-primary-foreground/10 text-primary-foreground placeholder:text-primary-foreground",
+                    errors.password && " focus:ring-red-500"
+                  )}
                 />
+                {errors?.password && (
+                  <span className="text-red-500 text-sm">
+                    {errors?.password}
+                  </span>
+                )}
               </div>
               <Button
                 type="submit"
