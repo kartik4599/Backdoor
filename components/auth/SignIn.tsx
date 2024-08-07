@@ -1,8 +1,32 @@
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { useForm } from "react-hook-form";
+import { cn, SignInForm, signInFormResolver } from "@/lib/utils";
+import { useState } from "react";
+import { FaSpinner } from "react-icons/fa6";
+import { loginAccount } from "@/lib/services";
 
 const SignIn = ({ setisSignUp }: { setisSignUp: () => void }) => {
+  const { handleSubmit, formState, register } = useForm<SignInForm>({
+    resolver: signInFormResolver,
+  });
+  const { errors } = formState as unknown as {
+    errors: { [key: string]: string };
+  };
+  const [loading, setloading] = useState(false);
+
+  const loginHandler = async (payload: SignInForm) => {
+    try {
+      setloading(true);
+      const data = await loginAccount(payload);
+      localStorage.setItem("userdata",JSON.stringify(data));
+    } catch (e) {  
+    } finally {
+      setloading(false);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center bg-muted p-8 lg:p-12">
       <div className="mx-auto w-full max-w-md space-y-6">
@@ -12,27 +36,47 @@ const SignIn = ({ setisSignUp }: { setisSignUp: () => void }) => {
             Enter your email and password to access your account.
           </p>
         </div>
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={handleSubmit(loginHandler)}>
           <div className="space-y-2">
-            <Label htmlFor="email">Email</Label>
+            <Label
+              htmlFor="email"
+              className={cn(errors.email && "text-red-500")}
+            >
+              Email
+            </Label>
             <Input
               id="email"
               type="email"
               placeholder="name@example.com"
-              required
+              {...register("email")}
             />
+            <span className="text-red-500 text-sm">{errors?.email}</span>
           </div>
           <div className="space-y-2">
-            <Label htmlFor="password">Password</Label>
-            <Input id="password" type="password" required />
+            <Label
+              htmlFor="password"
+              className={cn(errors.email && "text-red-500")}
+            >
+              Password
+            </Label>
+            <Input id="password" type="password" {...register("password")} />
+            <span className="text-red-500 text-sm">{errors?.password}</span>
           </div>
           <Button type="submit" className="w-full">
-            Sign In
+            {loading ? (
+              <>
+                <FaSpinner className="animate-spin text-xl mx-2" />
+                Signing In...
+              </>
+            ) : (
+              "Sign In"
+            )}
           </Button>
         </form>
         <p
           className="text-center text-sm text-muted-foreground"
-          onClick={setisSignUp}>
+          onClick={setisSignUp}
+        >
           Don't have an account?
           <span className="underline cursor-pointer">Sign Up</span>
         </p>

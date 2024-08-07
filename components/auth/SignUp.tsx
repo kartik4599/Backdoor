@@ -67,9 +67,7 @@ const SignUp = ({ setisSignIn }: { setisSignIn: () => void }) => {
                   )}
                   {...register("name")}
                 />
-                {errors?.name && (
-                  <span className="text-red-500 text-sm">{errors?.name}</span>
-                )}
+                <span className="text-red-500 text-sm">{errors?.name}</span>
               </div>
               <div className="space-y-2">
                 <Label
@@ -91,9 +89,7 @@ const SignUp = ({ setisSignIn }: { setisSignIn: () => void }) => {
                     errors.email && " focus:ring-red-500"
                   )}
                 />
-                {errors?.email && (
-                  <span className="text-red-500 text-sm">{errors?.email}</span>
-                )}
+                <span className="text-red-500 text-sm">{errors?.email}</span>
               </div>
               <div className="space-y-2">
                 <Label
@@ -114,11 +110,7 @@ const SignUp = ({ setisSignIn }: { setisSignIn: () => void }) => {
                     errors.password && " focus:ring-red-500"
                   )}
                 />
-                {errors?.password && (
-                  <span className="text-red-500 text-sm">
-                    {errors?.password}
-                  </span>
-                )}
+                <span className="text-red-500 text-sm">{errors?.password}</span>
               </div>
               <Button
                 type="submit"
