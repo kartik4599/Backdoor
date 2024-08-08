@@ -48,8 +48,8 @@ User.post("/signin", async ({ json, req }) => {
     const isPasswordValid = await verifyPassword(password, user.password);
     if (!isPasswordValid) throw new Error("Invalid credentials");
 
-    const { password: _, ...data } = user;
-    const token = await createJwtToken(data);
+    // const { password: _, ...data } = user;
+    const token = await createJwtToken(user.id);
 
     return json({ message: "SignIn Successful", token });
   } catch (e: any) {
@@ -58,7 +58,20 @@ User.post("/signin", async ({ json, req }) => {
 });
 
 User.get("/me", jwt({ secret: "secret" }), async ({ get, json }) => {
-  return json(get("jwtPayload"));
+  try {
+    const { data: userId } = get("jwtPayload") as { data: number };
+
+    const user = await client.user.findUnique({
+      where: { id: userId },
+      select: { id: true, name: true, email: true },
+    });
+
+    if (!user) throw new Error("Client not found");
+
+    return json({ data: user });
+  } catch (e: any) {
+    throw new HTTPException(400, { message: e.message });
+  }
 });
 
 export default User;

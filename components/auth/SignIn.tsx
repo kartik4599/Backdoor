@@ -6,11 +6,14 @@ import { cn, SignInForm, signInFormResolver } from "@/lib/utils";
 import { useState } from "react";
 import { FaSpinner } from "react-icons/fa6";
 import { loginAccount } from "@/lib/services";
+import userStore from "@/hooks/user-store";
 
 const SignIn = ({ setisSignUp }: { setisSignUp: () => void }) => {
   const { handleSubmit, formState, register } = useForm<SignInForm>({
     resolver: signInFormResolver,
   });
+  const setUser = userStore((state) => state.setUser);
+
   const { errors } = formState as unknown as {
     errors: { [key: string]: string };
   };
@@ -20,8 +23,9 @@ const SignIn = ({ setisSignUp }: { setisSignUp: () => void }) => {
     try {
       setloading(true);
       const data = await loginAccount(payload);
-      localStorage.setItem("userdata",JSON.stringify(data));
-    } catch (e) {  
+      console.log(data);
+      setUser(data.token);
+    } catch (e) {
     } finally {
       setloading(false);
     }

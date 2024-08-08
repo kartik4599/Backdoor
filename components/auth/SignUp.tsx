@@ -15,7 +15,7 @@ const SignUp = ({ setisSignIn }: { setisSignIn: () => void }) => {
   const { errors } = formState as unknown as {
     errors: { [key: string]: string };
   };
-  const [userCreated, setuserCreated] = useState(false);
+  const [userCreated, setuserCreated] = useState(true);
   const [loading, setloading] = useState(false);
 
   const createUser = async (payload: SignUpForm) => {

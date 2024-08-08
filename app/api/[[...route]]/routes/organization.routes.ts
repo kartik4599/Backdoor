@@ -1,5 +1,4 @@
 import client from "@/lib/DBClient";
-import { User } from "@prisma/client";
 import { Hono } from "hono";
 import { HTTPException } from "hono/http-exception";
 import { jwt } from "hono/jwt";
@@ -36,11 +35,11 @@ Organization.post(
   async ({ get, json, req }) => {
     try {
       const { name, description } = await req.json();
-      const { data: user } = get("jwtPayload") as { data: User };
+      const { data: userId } = get("jwtPayload") as { data: number };
       if (!name) throw new Error("Name fields are required");
 
       const newOrganization = await client.organization.create({
-        data: { name, description, users: { connect: { id: user.id } } },
+        data: { name, description, users: { connect: { id: userId } } },
       });
 
       return json({
