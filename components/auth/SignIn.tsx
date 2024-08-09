@@ -7,13 +7,15 @@ import { useState } from "react";
 import { FaSpinner } from "react-icons/fa6";
 import { loginAccount } from "@/lib/services";
 import userStore from "@/hooks/user-store";
+import Biscuit from "js-cookie";
+import { useRouter } from "next/navigation";
 
 const SignIn = ({ setisSignUp }: { setisSignUp: () => void }) => {
   const { handleSubmit, formState, register } = useForm<SignInForm>({
     resolver: signInFormResolver,
   });
   const setUser = userStore((state) => state.setUser);
-
+  const router = useRouter();
   const { errors } = formState as unknown as {
     errors: { [key: string]: string };
   };
@@ -23,8 +25,9 @@ const SignIn = ({ setisSignUp }: { setisSignUp: () => void }) => {
     try {
       setloading(true);
       const data = await loginAccount(payload);
-      console.log(data);
       setUser(data.token);
+      Biscuit.set("token", data.token);
+      router.refresh();
     } catch (e) {
     } finally {
       setloading(false);
