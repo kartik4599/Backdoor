@@ -22,7 +22,7 @@ User.post("/signup", async ({ json, req }) => {
 
     const hashedPassword = await createPasswordHash(password);
 
-    const { password: _, ...data } = await client.user.create({
+    const user = await client.user.create({
       data: {
         name,
         email,
@@ -30,7 +30,9 @@ User.post("/signup", async ({ json, req }) => {
       },
     });
 
-    return json({ message: "SignUp Successful", data });
+    const token = await createJwtToken(user.id);
+
+    return json({ message: "SignUp Successful", token });
   } catch (e: any) {
     throw new HTTPException(400, { message: e.message });
   }
@@ -48,7 +50,6 @@ User.post("/signin", async ({ json, req }) => {
     const isPasswordValid = await verifyPassword(password, user.password);
     if (!isPasswordValid) throw new Error("Invalid credentials");
 
-    // const { password: _, ...data } = user;
     const token = await createJwtToken(user.id);
 
     return json({ message: "SignIn Successful", token });

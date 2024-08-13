@@ -7,8 +7,8 @@ import { useState } from "react";
 import { FaSpinner } from "react-icons/fa6";
 import { loginAccount } from "@/lib/services";
 import userStore from "@/hooks/user-store";
-import Biscuit from "js-cookie";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 const SignIn = ({ setisSignUp }: { setisSignUp: () => void }) => {
   const { handleSubmit, formState, register } = useForm<SignInForm>({
@@ -26,9 +26,10 @@ const SignIn = ({ setisSignUp }: { setisSignUp: () => void }) => {
       setloading(true);
       const data = await loginAccount(payload);
       setUser(data.token);
-      Biscuit.set("token", data.token);
+      toast.success("Logged In Succefully");
       router.refresh();
     } catch (e) {
+      toast.error("Error Occured");
     } finally {
       setloading(false);
     }

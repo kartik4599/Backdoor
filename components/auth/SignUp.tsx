@@ -7,25 +7,30 @@ import { FaSpinner } from "react-icons/fa6";
 import { createAccount } from "@/lib/services";
 import { useForm } from "react-hook-form";
 import { cn, SignUpForm, signUpFormResolver } from "@/lib/utils";
+import userStore from "@/hooks/user-store";
+import { toast } from "sonner";
 
 const SignUp = ({ setisSignIn }: { setisSignIn: () => void }) => {
+  const setUser = userStore((state) => state.setUser);
   const { register, handleSubmit, formState } = useForm<SignUpForm>({
     resolver: signUpFormResolver,
   });
   const { errors } = formState as unknown as {
     errors: { [key: string]: string };
   };
-  const [userCreated, setuserCreated] = useState(true);
+  const [userCreated, setuserCreated] = useState(false);
   const [loading, setloading] = useState(false);
 
   const createUser = async (payload: SignUpForm) => {
     try {
       setloading(true);
-      const { data } = await createAccount(payload);
-      if (!data.organizationId) setuserCreated(true);
-      console.log(data);
-    } catch (e) {
-      console.log(e);
+      const { token } = await createAccount(payload);
+      setuserCreated(true);
+      setUser(token);
+      toast.success('Account Created')
+    } catch (e: any) {
+      console.log(e?.response?.data);
+      toast.error(e?.response?.data || "Error Occured");
     } finally {
       setloading(false);
     }

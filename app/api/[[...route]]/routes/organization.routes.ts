@@ -52,6 +52,35 @@ Organization.post(
   }
 );
 
+Organization.post(
+  "/:id",
+  jwt({ secret: "secret" }),
+  async ({ req, json, get }) => {
+    try {
+      const id = Number(req.param("id"));
+      if (isNaN(id)) throw new Error("Invalid id");
+      const { data: userId } = get("jwtPayload") as { data: number };
+
+      const organizations = await client.organization.findUnique({
+        where: { id },
+      });
+
+      if (!organizations) throw new Error("Organization not found");
+
+      await client.user.update({
+        where: { id: userId },
+        data: { organizationId: id },
+      });
+
+      return json({
+        message: "Successfully Join the Organization",
+      });
+    } catch (e: any) {
+      throw new HTTPException(400, { message: e.message });
+    }
+  }
+);
+
 Organization.get("/:id", jwt({ secret: "secret" }), async ({ req, json }) => {
   try {
     const id = Number(req.param("id"));

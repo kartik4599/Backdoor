@@ -1,6 +1,7 @@
 import { getOwnData } from "@/lib/services";
 import { create } from "zustand";
 import { persist, devtools } from "zustand/middleware";
+import Biscuit from "js-cookie";
 
 interface UserStore {
   userData?: { id: number; name: string; email: string };
@@ -20,6 +21,7 @@ const userStore = create<UserStore>()(
           } else {
             token = localStorage.getItem("token") || "";
           }
+          Biscuit.set("token", token);
           const response = await getOwnData();
           set({
             userData: response.data,

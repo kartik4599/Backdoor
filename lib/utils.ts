@@ -17,6 +17,11 @@ export type SignInForm = {
   password: string;
 };
 
+export type CreateOrganizationForm = {
+  name: string;
+  description?: string;
+};
+
 export const signUpFormResolver: Resolver<SignUpForm> = async (values) => {
   const errors: any = {};
 
@@ -51,6 +56,21 @@ export const signInFormResolver: Resolver<SignInForm> = async (values) => {
   if (!values.password) errors.password = "Password is required";
   if (values.password && values.password.length < 6)
     errors.password = "Password should be at least 6 characters long";
+
+  return {
+    values: values,
+    errors,
+  };
+};
+
+export const createOrganizationForm: Resolver<CreateOrganizationForm> = async (
+  values
+) => {
+  const errors: any = {};
+
+  if (!values.name) errors.name = "Name is required";
+  if (values.name && values.name.length < 6)
+    errors.name = "Organization Name should be at least 6 characters long";
 
   return {
     values: values,

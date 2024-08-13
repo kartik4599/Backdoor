@@ -1,5 +1,6 @@
 import axios from "axios";
-import { SignInForm, SignUpForm } from "./utils";
+import { CreateOrganizationForm, SignInForm, SignUpForm } from "./utils";
+import { OrganizationQuery } from "@/hooks/use-organization";
 
 const baseURL = "/api";
 
@@ -12,6 +13,7 @@ export const protectedRequest = () => {
   });
 };
 
+// auth routes
 export const createAccount = async (payload: SignUpForm) => {
   const { data } = await unProtectedRequest.post("/auth/signup", payload);
   return data;
@@ -24,5 +26,27 @@ export const loginAccount = async (payload: SignInForm) => {
 
 export const getOwnData = async () => {
   const { data } = await protectedRequest().get("/auth/me");
+  return data;
+};
+
+// organization routes
+export const getOrganization = async ({
+  page,
+  search,
+  size,
+}: OrganizationQuery) => {
+  const { data } = await unProtectedRequest.get("/organization", {
+    params: { search, page, size },
+  });
+  return data.data;
+};
+
+export const joinOrganization = async (id: number) => {
+  const { data } = await protectedRequest().post(`/organization/${id}`);
+  return data;
+};
+
+export const createOrganization = async (payload: CreateOrganizationForm) => {
+  const { data } = await protectedRequest().post(`/organization`, payload);
   return data;
 };
