@@ -8,17 +8,38 @@ datasource db {
 }
 
 model User {
-  id             Int           @id @default(autoincrement())
-  email          String        @unique
+  id             Int              @id @default(autoincrement())
+  email          String           @unique
   password       String
   name           String?
-  organization   Organization? @relation(fields: [organizationId], references: [id])
+  organization   Organization?    @relation(fields: [organizationId], references: [id])
   organizationId Int?
+  ownPasswords   Passwords[]      @relation()
+  sharedPassword SharedPassword[]
 }
 
 model Organization {
-  id          Int     @id @default(autoincrement())
-  name        String  @unique
+  id          Int         @id @default(autoincrement())
+  name        String      @unique
   description String?
   users       User[]
+  passwords   Passwords[]
+}
+
+model Passwords {
+  id             Int              @id @default(autoincrement())
+  createdById    Int
+  createdBy      User             @relation(fields: [createdById], references: [id])
+  sharedWith     SharedPassword[]
+  organizationId Int
+  organization   Organization     @relation(fields: [organizationId], references: [id])
+}
+
+model SharedPassword {
+  userId     Int
+  user       User      @relation(fields: [userId], references: [id])
+  passwordId Int
+  password   Passwords @relation(fields: [passwordId], references: [id])
+
+  @@unique([userId])
 }
